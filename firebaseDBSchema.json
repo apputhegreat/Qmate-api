@@ -1,0 +1,43 @@
+{
+    "quotes": {
+        "key": {
+            "id": "key",
+            "text": "You should be a good follower first, to become a good leader",
+            "author": "anji",
+            "authorId": "authorPushKey",
+            "likes": 12,
+            "shares": 9,
+            "moodCode": "2"
+        }
+    },
+    “quoteOfDay”: “key”,
+     "authors": {
+        "key": {
+            "id": "key",
+            "name": "anji",
+            "image": "url"
+        }
+    },
+    "config": {
+        "moods": {
+            "1": "motivation, inspirational",
+            "2": "inspirational, leadership",
+            "3": "Humour",
+            "4": "Life, Love",
+            "5": "music, art",
+            "6": "truth, peace",
+            "7": "work"
+        }
+    },
+    "users": {
+        "key": {
+            "id": "key",
+            "name": "name",
+            "email": "email",
+            "type": "paid/unpaid",
+            "image": "imageUrl",
+            "favouriteQuotes": ["key1", "key2"],
+            "favouriteAuthors": ["key1", "key2"]
+        }
+    }
+}
