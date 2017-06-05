@@ -1,8 +1,9 @@
-import * as _ from 'lodash';
-import { sprintf } from 'sprintf-js';
+var _ = require('lodash');
+var sprintf = require('sprintf-js').sprintf;
 
-import CustomRebase from '../common/CustomRebase'
-const dummyData from '../test/test.json'
+var CustomRebase = require('../common/CustomRebase').CustomRebase
+var authorsData = require('../test/test.js').authorsData
+var quotesData = require('../test/test.js').quotesData
 
 function update (path, data, callback) {
   const options = {
@@ -25,14 +26,27 @@ function push(path, data, callback) {
 }
 
 function writeQuote(quote, callback) {
-  var pushKey = CustomRebase.push('quotes').key();
-  const path = sprintf('quotes/%s', pushKey)
+  var pushKey = CustomRebase.initializedApp.database().ref('quotes').push().key;
+  const path = sprintf('quotes/%s', pushKey);
   quote.id = pushKey;
   update(path, quote, callback)
 }
 
-export function writeQuotes(quotes, callback) {
-  _.map(dummyData, (quote) => {
+function writeQuotes(quotes, callback) {
+  _.map(quotesData, (quote) => {
     writeQuote(quote, callback)
+  })
+}
+
+function writeAuthor(author, callback) {
+  var pushKey = CustomRebase.initializedApp.database().ref('authors').push().key;
+  const path = sprintf('authors/%s', pushKey);
+  author.id = pushKey;
+  update(path, author, callback)
+}
+
+function writeAuthors(authors, callback) {
+  _.map(authorsData, (author) => {
+    writeAuthor(author, callback)
   })
 }
