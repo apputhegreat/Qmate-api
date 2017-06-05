@@ -50,3 +50,13 @@ function writeAuthors(authors, callback) {
     writeAuthor(author, callback)
   })
 }
+
+function setConfigs(path, config, callback) {
+  update(path, config, callback)
+}
+
+module.exports = {
+  writeQuotes: writeQuotes,
+  writeAuthors: writeAuthors,
+  setConfigs: setConfigs
+}
