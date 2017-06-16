@@ -2,8 +2,6 @@ var _ = require('lodash');
 var sprintf = require('sprintf-js').sprintf;
 
 var CustomRebase = require('../common/CustomRebase').CustomRebase
-var authorsData = require('../test/test.js').authorsData
-var quotesData = require('../test/test.js').quotesData
 
 function update (path, data, callback) {
   const options = {
@@ -33,7 +31,7 @@ function writeQuote(quote, callback) {
 }
 
 function writeQuotes(quotes, callback) {
-  _.map(quotesData, (quote) => {
+  _.map(quotes, (quote) => {
     writeQuote(quote, callback)
   })
 }
@@ -46,7 +44,7 @@ function writeAuthor(author, callback) {
 }
 
 function writeAuthors(authors, callback) {
-  _.map(authorsData, (author) => {
+  _.map(authors, (author) => {
     writeAuthor(author, callback)
   })
 }

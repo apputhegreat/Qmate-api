@@ -10,7 +10,6 @@ var app = firebase.initializeApp({
 
 var CustomRebase = Rebase.createClass(app.database());
 
-//export default CustomRebase;
 module.exports = {
   CustomRebase: CustomRebase
 };
