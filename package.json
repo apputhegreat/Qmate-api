@@ -7,6 +7,7 @@
     "bootstrap": "^3.3.7",
     "firebase": "^4.1.1",
     "fs": "0.0.1-security",
+    "lodash": "^4.17.4",
     "re-base": "^3.0.1",
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",
