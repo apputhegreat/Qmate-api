@@ -1,0 +1,18 @@
+{
+  "apiKey": "AIzaSyADqLZpW3HIaPdg0zKJ3CnVD2cfPVa_5NQ",
+  "authDomain": "qmate-aea6e.firebaseio.com",
+  "databaseURL": "https://qmate-aea6e.firebaseio.com",
+  "storageBucket": "gs://qmate-aea6e.appspot.com",
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "hosting": {
+    "public": "build",
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
