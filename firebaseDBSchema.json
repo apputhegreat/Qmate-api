@@ -7,7 +7,10 @@
             "authorId": "authorPushKey",
             "likes": 12,
             "shares": 9,
-            "moodCode": "2"
+            "tags" {
+              0: "Motivational",
+              1: "Inspirational"
+            }
         }
     },
     “quoteOfDay”: “key”,
@@ -18,16 +21,14 @@
             "image": "url"
         }
     },
-    "config": {
-        "moods": {
-            "1": "motivation, inspirational",
-            "2": "inspirational, leadership",
-            "3": "Humour",
-            "4": "Life, Love",
-            "5": "music, art",
-            "6": "truth, peace",
-            "7": "work"
-        }
+    "tags": {
+        "1": "motivation",
+        "2": "inspirational",
+        "3": "Humour",
+        "4": "Life",
+        "5": "music",
+        "6": "truth",
+        "7": "work"
     },
     "users": {
         "key": {
