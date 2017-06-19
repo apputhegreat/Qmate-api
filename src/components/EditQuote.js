@@ -3,7 +3,7 @@ import React from 'react';
 
 import firebaseUtil from '../utils/firebaseUtil'
 
-class  AddQuote extends React.Component {
+class  EditQuote extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -125,5 +125,5 @@ class  AddQuote extends React.Component {
   }
 }
 
-AddQuote = Form.create({})(AddQuote);
-export default AddQuote;
+EditQuote = Form.create({})(EditQuote);
+export default EditQuote;

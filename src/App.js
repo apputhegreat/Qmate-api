@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+
 import './App.css';
-//import AddQuote from './components/AddQuote';
 import AppHeader from './components/AppHeader';
-import ListQuotes from './components/ListQuotes'
 import 'antd/dist/antd.css';
+import Main from './components/Main';
 
 class App extends Component {
   render() {
@@ -12,7 +12,7 @@ class App extends Component {
         <div className="App-header">
           <AppHeader />
         </div>
-        <ListQuotes />
+        <Main />
       </div>
     );
   }
