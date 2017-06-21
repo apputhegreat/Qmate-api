@@ -8,7 +8,7 @@ const Main = () => (
   <div>
     <Switch>
       <Route exact path='/' component={ListQuotes} />
-      <Route path='/editquote' component={EditQuote} />
+      <Route path='/editquote/:quoteId' component={EditQuote} />
     </Switch>
   </div>
 )
