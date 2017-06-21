@@ -25,7 +25,6 @@ class ListQuotes extends React.Component {
   }
 
   componentWillMount() {
-    console.log('ComponentWillMount');
     this.refOff = CustomRebase.listenTo('quotes', {
       context: this,
       asArray: true,
@@ -36,13 +35,11 @@ class ListQuotes extends React.Component {
         })
       },
       onFailure(err) {
-        console.log('err', err);
+        if (err) {
+          console.log('err', err);
+        }
       }
     })
-  }
-
-  onEditQuote(record) {
-    console.log('record', record);
   }
 
   onSearchQuoteChange = (e) => {
@@ -121,10 +118,6 @@ class ListQuotes extends React.Component {
     });
   }
 
-  componentWillUnmount() {
-    CustomRebase.removeBinding(this.refOff)
-  }
-
   render() {
     const columns = [{
       title: <b>Quote</b>,
@@ -198,6 +191,12 @@ class ListQuotes extends React.Component {
           tagFilterDropdownVisible: visible,
         }, () => this.searchInputTags.focus());
       },
+      render: (value, record, index) => {
+        var tagString = record.tags.join(',');
+          return (
+            <label>{tagString}</label>
+          )
+        }
     }, {
         title: <b>Action</b>,
         render: (value, record, index) => {
@@ -205,9 +204,9 @@ class ListQuotes extends React.Component {
             <div>
               <Row>
                 <Col span={12}>
-                  <Link to={`/editquote`}
+                  <Link to={`/editquote/${record.id}`}
                     className="link-primary">
-                    <Button onClick={() => this.onEditQuote(record)}>
+                    <Button>
                       <Icon type="edit"/>
                     </Button>
                   </Link>
@@ -227,6 +226,10 @@ class ListQuotes extends React.Component {
         </Row>
       </div>
     )
+  }
+
+  componentWillUnmount() {
+    CustomRebase.removeBinding(this.refOff)
   }
 }
 

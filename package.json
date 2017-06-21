@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "antd": "^2.10.4",
+    "async": "^2.4.1",
     "bootstrap": "^3.3.7",
     "firebase": "^4.1.1",
     "fs": "0.0.1-security",
