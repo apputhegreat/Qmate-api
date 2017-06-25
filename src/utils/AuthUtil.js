@@ -1,10 +1,10 @@
 import { CustomRebase } from '../common/CustomRebase';
 
 export function authenticatePassword(username, password, callback) {
-  CustomRebase.initializedApp.auth().signInWithEmailAndPassword(username, password).catch((err) => {
-    callback(err)
-  }).then((user) => {
+  CustomRebase.initializedApp.auth().signInWithEmailAndPassword(username, password).then((user) => {
     callback(null, user);
+  }).catch((err) => {
+    callback(err)
   });
 }
 
