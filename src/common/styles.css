@@ -9,3 +9,14 @@
   width: 130px;
   margin-right: 8px;
 }
+
+.login-container {
+  display: block;
+  margin-left: auto;
+  margin-right: 10%;
+  margin-top: 10%;
+  max-width: 400px;
+  border: 1px solid lightgray;
+  padding: 50px;
+  border-radius: 10px;
+}

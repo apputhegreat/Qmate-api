@@ -13,16 +13,6 @@ function update (path, data, callback) {
   CustomRebase.update(path, options);
 }
 
-function push(path, data, callback) {
-  const options = {
-    data,
-    then: (err) => {
-      callback(err);
-    },
-  };
-  CustomRebase.push(path, options);
-}
-
 function remove(path, callback) {
   CustomRebase.remove(path, callback);
 }
