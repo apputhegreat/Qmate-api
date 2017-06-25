@@ -32,8 +32,9 @@ class Login extends React.Component {
               isLoginFailed: true,
             });
             return;
+        } else {
+          this.props.history.push('/');
         }
-        this.props.history.push('/');
         })
       }
     })
