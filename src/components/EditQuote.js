@@ -1,6 +1,5 @@
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import React from 'react';
-import { BrowserRouter, Redirect } from 'react-router-dom';
 import async from 'async';
 import * as _ from 'lodash';
 
@@ -91,7 +90,7 @@ class  EditQuote extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if(!err){
         var author = _.find(this.state.authors, (author) => {
-          return author.id == values.authorId;
+          return author.id === values.authorId;
         });
         var quote = {
           id: this.state.quoteId,
@@ -106,7 +105,7 @@ class  EditQuote extends React.Component {
          if (!err) {
            var allTags = _.union(this.state.tags, quote.tags)
            firebaseUtil.setTags(allTags, (err) => {
-             if (err) {
+             if (!err) {
                this.props.history.goBack();
              }
            })
