@@ -1,16 +1,16 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import ListQuotes from './ListQuotes';
 import EditQuote from './EditQuote';
 
 const Main = () => (
-  <div>
+  <BrowserRouter>
     <Switch>
       <Route exact path='/' component={ListQuotes} />
       <Route path='/editquote/:quoteId' component={EditQuote} />
     </Switch>
-  </div>
+  </BrowserRouter>
 )
 
 export default Main;
