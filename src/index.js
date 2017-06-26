@@ -14,7 +14,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Switch>
         <Route path="/login" component={Login} />
-        <Route exact path="/" component={App}/>
+        <Route path="/" component={App}/>
       </Switch>
     </BrowserRouter>
   </LocaleProvider>,
