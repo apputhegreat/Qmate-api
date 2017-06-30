@@ -114,6 +114,37 @@ function setConfigs(path, config, callback) {
   update(path, config, callback)
 }
 
+function writeAuthorWithImages(authors, callback) {
+  var authorsObj = _.map(authors, (author) => {
+    var path = sprintf('authors/%s', author.image.name)
+    var ref = CustomRebase.initializedApp.storage().ref().child(path)
+    ref.put(author.image).then(function(snapshot) {
+      console.log(snapshot);
+    });
+    var storageLink = sprintf('gs://%s/%s',ref.location.bucket, ref.location.path_)
+    return {
+      name: author.name,
+      image: storageLink
+    }
+  })
+  writeAuthors(authorsObj, callback);
+}
+
+function fetchAuthor(authorId, callback) {
+  const path = sprintf('authors/%s', authorId);
+  fetch(path, callback);
+}
+
+function removeAuthor(authorId, callback) {
+  const path = sprintf('authors/%s', authorId);
+  remove(path, callback);
+}
+
+function updateAuthor(author, callback) {
+  const path = sprintf('authors/%s', author.id);
+  update(path, author, callback)
+}
+
 module.exports = {
   writeQuotes,
   writeAuthors,
@@ -123,5 +154,9 @@ module.exports = {
   fetchTags,
   fetchAuthors,
   updateQuote,
-  setTags
+  setTags,
+  writeAuthorWithImages,
+  fetchAuthor,
+  removeAuthor,
+  updateAuthor
 }

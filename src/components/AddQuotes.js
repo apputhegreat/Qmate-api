@@ -51,8 +51,7 @@ class AddQuotes extends React.Component {
     quotesDataSource.push({
       text: '',
       authorId: '',
-      tags: [],
-      index: 0
+      tags: []
     });
     this.setState({
       quotesDataSource,
