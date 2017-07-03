@@ -197,7 +197,7 @@ class AddQuotes extends React.Component {
           })(
             <Select onChange={(values) => this.tagsChangeHandler(index, values)}
               mode="tags"
-              placeholder="Select a option and change input text above">
+              placeholder="Select a option">
               {tagsComponent}
             </Select>
           )}
