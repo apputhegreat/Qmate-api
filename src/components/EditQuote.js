@@ -1,9 +1,10 @@
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import React from 'react';
-import async from 'async';
 import * as _ from 'lodash';
 
-import firebaseUtil from '../utils/firebaseUtil'
+import firebaseUtil from '../utils/firebaseUtil';
+import { CustomRebase } from '../common/CustomRebase';
+
 
 class  EditQuote extends React.Component {
   constructor(props) {
@@ -17,74 +18,31 @@ class  EditQuote extends React.Component {
   }
 
   componentWillMount() {
-    function fetchTags(callback) {
-      firebaseUtil.fetchTags(callback);
-    }
+    firebaseUtil.fetchTags((err, tags) => {
+      if (!err) {
+        this.setState({ tags });
+      }
+    });
 
-    function fetchAuthors(tags, callback) {
-      firebaseUtil.fetchAuthors((err, data) => {
-        callback(err, data, tags);
-      })
-    }
+    this.authorsRef = CustomRebase.listenTo('authors', {
+      context: this,
+      asArray: true,
+      then(authors) {
+        this.setState({ authors })
+      },
+      onFailure(err) {
+        console.log(err);
+      }
+    });
 
-    function fetchQuote(authors, tags, callback) {
-      firebaseUtil.fetchQuote(this.state.quoteId, (err, data) => {
-        callback(err, data, authors, tags);
-      })
-    }
-
-    function setValues(quote, authors, tags, callback) {
-      this.setState({
-        authors,
-        tags
-      });
+    firebaseUtil.fetchQuote(this.state.quoteId, (err, quote) => {
       this.props.form.setFieldsValue({
                 text: quote.text,
                 tags: quote.tags,
                 authorId: quote.authorId
       });
-      callback(null);
-    }
-
-    async.waterfall([
-      fetchTags.bind(this),
-      fetchAuthors.bind(this),
-      fetchQuote.bind(this),
-      setValues.bind(this)
-    ], (err) => {
-      if (err) {
-        console.log(err);
-      }
     })
   }
-
-  // handleSave() {
-  //   var isFormValid = false
-  //   this.props.form.validateFieldsAndScroll(['quote', 'tags'],(err, formObj) => {
-  //     if(err){
-  //       isFormValid = false;
-  //       return
-  //     }
-  //     var authorName = this.props.form.getFieldValue('author');
-  //     if ( authorName == undefined || authorName === 'select') {
-  //       this.props.form.validateFieldsAndScroll(['newAuthor'], (err, values) => {
-  //         if (!err) {
-  //           authorName = values.newAuthor
-  //         }
-  //       })
-  //     }
-  //     var quotes = [{
-  //       text: formObj.quote,
-  //       author: authorName,
-  //       likes: 0,
-  //       shares: 0,
-  //       moodCodes: [1,2]
-  //     }]
-  //     firebaseUtil.writeQuotes(quotes, function(err) {
-  //       console.log('err', err);
-  //     })
-  //   })
-  // }
 
   handleSave() {
     this.props.form.validateFieldsAndScroll((err, values) => {

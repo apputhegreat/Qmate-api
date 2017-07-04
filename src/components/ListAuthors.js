@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Col, Icon,Input, Table, Row } from 'antd'
 import * as _ from 'lodash'
-import async from 'async';
 
 import { CustomRebase } from '../common/CustomRebase'
 import '../common/styles.css'
@@ -112,7 +111,7 @@ class ListAuthors extends React.Component {
       width: '50%',
       render: (value, record, index) => {
         return (
-          <img src={record.downloadLink} height="42" width="42"/>
+          <img src={record.downloadLink} alt="" height="42" width="42"/>
         )
         }
     }, {

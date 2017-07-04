@@ -7,9 +7,7 @@ function update (path, data, callback) {
   const options = {
     data,
     then: (err) => {
-      if (err) {
-        callback(err);
-      }
+      callback(err);
     },
   };
   CustomRebase.update(path, options);
@@ -121,7 +119,6 @@ function writeAuthorWithImages(authors, callback) {
     var path = sprintf('authors/%s', author.image.name)
     var ref = CustomRebase.initializedApp.storage().ref().child(path)
     ref.put(author.image).then(function(snapshot) {
-      console.log(snapshot);
     });
     var storageLink = sprintf('gs://%s/%s',ref.location.bucket, ref.location.path_)
     return {
