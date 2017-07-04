@@ -1,10 +1,10 @@
-import async from 'async';
 import React from 'react';
 import { Button, Col, Form, Input, Icon, message, Row, Select, Table } from 'antd';
 import * as _ from 'lodash'
 
 import firebaseUtil from '../utils/firebaseUtil';
 import '../common/styles.css';
+import { CustomRebase } from '../common/CustomRebase'
 
 class AddQuotes extends React.Component {
   constructor(props) {
@@ -17,33 +17,22 @@ class AddQuotes extends React.Component {
   }
 
   componentWillMount() {
-    function fetchTags(callback) {
-      firebaseUtil.fetchTags(callback);
-    }
+    firebaseUtil.fetchTags((err, tags) => {
+      if (!err) {
+        this.setState({ tags });
+      }
+    });
 
-    function fetchAuthors(tags, callback) {
-      firebaseUtil.fetchAuthors((err, data) => {
-        callback(err, data, tags);
-      })
-    }
-
-    function setValues(authors, tags, callback) {
-      this.setState({
-        authors,
-        tags
-      });
-      callback(null);
-    }
-
-    async.waterfall([
-      fetchTags.bind(this),
-      fetchAuthors.bind(this),
-      setValues.bind(this)
-    ], (err) => {
-      if (err) {
+    this.authorsRef = CustomRebase.listenTo('authors', {
+      context: this,
+      asArray: true,
+      then(authors) {
+        this.setState({ authors })
+      },
+      onFailure(err) {
         console.log(err);
       }
-    })
+    });
   }
 
   newQuote() {

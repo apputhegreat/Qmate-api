@@ -1,7 +1,6 @@
-import { Button, Col, Form, Input, message, Row, Select } from 'antd';
+import { Button, Col, Form, Input, message, Row } from 'antd';
 import React from 'react';
 import async from 'async';
-import * as _ from 'lodash';
 import { sprintf } from 'sprintf-js';
 
 import firebaseUtil from '../utils/firebaseUtil';
@@ -38,7 +37,6 @@ class  EditAuthor extends React.Component {
   }
 
   handleSave() {
-    console.log('handleSave');
     function validateForm(callback) {
       this.props.form.validateFieldsAndScroll((err, values) => {
         callback(err, values)
@@ -47,7 +45,6 @@ class  EditAuthor extends React.Component {
 
     function deleteOldImage(values, callback) {
       var imageRef = CustomRebase.initializedApp.storage().refFromURL(this.state.author.image);
-      console.log('imageRef->', imageRef);
       imageRef.delete().then(() => {
         callback(null, values)
       }).catch((err) => {
@@ -56,9 +53,7 @@ class  EditAuthor extends React.Component {
     }
 
     function uploadNewImage(values, callback) {
-      console.log('uploadNewImage');
       var newImage = document.getElementById('new_image').files[0];
-      console.log('newImage', newImage);
       var storageRef = CustomRebase.initializedApp.storage()
       var newImageRef = storageRef.ref().child('authors/' + newImage.name)
       var storageLink = sprintf('gs://%s/%s',newImageRef.location.bucket, newImageRef.location.path_)
@@ -68,7 +63,6 @@ class  EditAuthor extends React.Component {
     }
 
     function updateAuthor(storageLink, values, callback) {
-      console.log('updateAuthor');
       var author = {
         id: this.state.authorId,
         name: values.name,
@@ -103,9 +97,7 @@ class  EditAuthor extends React.Component {
   }
 
   handleDelete() {
-    console.log('handleDelete');
     var imageRef = CustomRebase.initializedApp.storage().refFromURL(this.state.author.image);
-    console.log(imageRef);
     imageRef.delete().then(() => {
       firebaseUtil.removeAuthor(this.state.authorId, (err) => {
         if (!err) {
@@ -122,7 +114,6 @@ class  EditAuthor extends React.Component {
   render() {
     const FormItem = Form.Item;
     const { getFieldDecorator } = this.props.form;
-    const Option = Select.Option;
 
     return (
       <div>
@@ -144,14 +135,14 @@ class  EditAuthor extends React.Component {
             </Row>
             <Row>
               <Col span={20} offset={2}>
-                <img id="current_image" height="50" width="50" />
+                <img id="current_image" alt="" height="50" width="50" />
               </Col>
             </Row>
             <Row>
               <Col span={20} offset={2}>
                 <FormItem
                   label='New Image'>
-                  { getFieldDecorator('newimage', {
+                  { getFieldDecorator('new_image', {
                       rules: [{ required: true, message: 'Image is mandatory field' }]
                     }) (
                       <Input type="file" id="new_image" />
