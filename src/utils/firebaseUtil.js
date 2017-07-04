@@ -7,7 +7,9 @@ function update (path, data, callback) {
   const options = {
     data,
     then: (err) => {
-      callback(err);
+      if (err) {
+        callback(err);
+      }
     },
   };
   CustomRebase.update(path, options);
