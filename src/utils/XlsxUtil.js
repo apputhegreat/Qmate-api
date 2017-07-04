@@ -8,19 +8,7 @@ var firebaseUtil = require('./firebaseUtil')
 
 var CustomRebase = require('../common/CustomRebase').CustomRebase
 
-var getQuote = (quote) => {
-  var quote = {}
-  var pushKey = CustomRebase.initializedApp.database().ref('quotes').push().key;
-  quote[pushKey] = {
-    text,
-    author,
-    tags
-  }
-  return quote
-}
-
 var getRow = (row, rowId, property, value) => {
-  console.log('getRow-->', row);
   if (!row) {
     row = {id: rowId }
     row[property] = value
@@ -37,10 +25,31 @@ var getAuthorByName = (authors, name) => {
   return author
 }
 
+var getQuoteByText = (quotes, text) => {
+  var quoteObj = _.find(quotes, (quote) => {
+   return quote.text.trim().toUpperCase() == text.trim().toUpperCase()
+  })
+  return quoteObj
+}
+
+function getUniqQuotes(quotesInDB, newQuotes) {
+  newQuotes = _.filter(newQuotes, (value, key) => {
+    if (!value.text || !value.tags) {
+      return false;
+    }
+    var quoteObj = getQuoteByText(quotesInDB, value.text)
+    if (quoteObj) {
+      return false
+    }
+    return true;
+  })
+  return newQuotes;
+}
+
 var setQuotesFromXlsx = () => {
  var authorsDB = []
  var authorsNotInDB = []
- var getQuotes = (authorsInDB, callback) => {
+ var readQuotes = (quotesInDB, authorsInDB, callback) => {
    authorsDB = authorsInDB
    var workbook = xlsx.readFile(__dirname +"/../../configs/Quotes.xlsx");
    var QuotesSheet = workbook.Sheets["Quotes"]
@@ -51,8 +60,12 @@ var setQuotesFromXlsx = () => {
      if(rowId==1) continue
      switch (key[0]) {
        case "A":
-          quotes[rowId] = getRow(quotes[rowId], rowId, 'text', QuotesSheet[key].v.trim())
-         break;
+          if (QuotesSheet[key].v.trim()) {
+            quotes[rowId] = getRow(quotes[rowId], rowId, 'text', QuotesSheet[key].v.trim())
+            break;
+          } else {
+            continue;
+          }
        case "B":
           quotes[rowId] = getRow(quotes[rowId], rowId, 'author', QuotesSheet[key].v.trim())
           var authorObj = getAuthorByName(authorsDB, QuotesSheet[key].v.trim())
@@ -83,19 +96,27 @@ var setQuotesFromXlsx = () => {
            }
         break;
        case "C":
-          var tagList = QuotesSheet[key].v.trim().split(',');
-          quotes[rowId] = getRow(quotes[rowId], rowId, 'tags', tagList)
-        break;
+          if (QuotesSheet[key].v.trim()) {
+            var tagList = QuotesSheet[key].v.trim().split(',');
+            quotes[rowId] = getRow(quotes[rowId], rowId, 'tags', tagList)
+            break;
+          } else {
+            continue
+          }
      }
    }
-   firebaseUtil.writeQuotes(quotes, callback);
-   //CustomRebase.initializedApp.database().ref('tags').set(["Motivational", "Inspirational", "Love", "Humor", "Wisdom", "Happy", "God", "Mind", "Life", "Philosophy"])
+   var uniqQuotes = getUniqQuotes(quotesInDB, quotes);
+   firebaseUtil.writeQuotes(uniqQuotes, callback);
  }
 
  //fs.writeFile('quotes.json', JSON.stringify(quotes), 'utf8', callback);
- async.waterfall([getAllAuthors, getQuotes], (err, data) => {
+ async.waterfall([
+   getAllAuthors,
+   getAllQuotes,
+   readQuotes
+ ], (err, data) => {
    if (err) {
-     console.log(err);
+     console.log('err->', err);
    }
  })
 }
@@ -110,7 +131,18 @@ var getAllAuthors = (callback) => {
 })
 }
 
+var getAllQuotes = (authors, callback) => {
+  CustomRebase.fetch('quotes', {
+  context: this,
+  asArray: true,
+  then(data){
+    callback(null, data, authors)
+  }
+})
+}
+
 module.exports = {
   setQuotesFromXlsx: setQuotesFromXlsx,
   getAllAuthors: getAllAuthors,
+  getAllQuotes: getAllQuotes
 }
