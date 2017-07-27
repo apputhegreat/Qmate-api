@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Col, Icon,Input, Table, Row } from 'antd'
+import { Badge, Button, Col, Icon,Input, Table, Row } from 'antd'
 import * as _ from 'lodash'
 
 import { CustomRebase } from '../common/CustomRebase'
@@ -136,6 +136,13 @@ class ListAuthors extends React.Component {
     return (
       <div>
         <Row style={{marginTop: 50}}>
+          <Col span={2} offset={20}>
+            <Badge count={this.state.filteredAuthors.length} overflowCount={10000}
+              showZero={true}
+              style={{ backgroundColor: '#05A4DE', width: 100, margin: '5px 0px 5px 0px' }} />
+          </Col>
+        </Row>
+        <Row>
           <Col span={20} offset={2}>
             <Table bordered columns={columns} dataSource={this.state.filteredAuthors}
               rowKey='id'/>
