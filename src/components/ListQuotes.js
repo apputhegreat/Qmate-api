@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Col, Icon,Input, Table, Row } from 'antd'
+import { Badge, Button, Col, Icon,Input, Table, Row } from 'antd'
 import * as _ from 'lodash'
 
 import { CustomRebase } from '../common/CustomRebase'
@@ -55,12 +55,17 @@ class ListQuotes extends React.Component {
       authorFiltered: false,
       tagFiltered: false,
       filteredQuotes: _.filter(quotes, (quote) => {
-        const match = quote.text.match(reg)
-        if (match) {
-          return true
+        if (quote.text) {
+          const match = quote.text.match(reg)
+          if (match) {
+            return true
+          } else {
+            return false
+          }
         } else {
           return false
         }
+
       })
     });
   }
@@ -78,11 +83,15 @@ class ListQuotes extends React.Component {
       quoteFiltered: false,
       tagFiltered: false,
       filteredQuotes: _.filter(quotes, (quote) => {
-        const match = quote.author.match(reg)
-        if (match) {
-          return true
+        if (quote.author) {
+          const match = quote.author.match(reg)
+          if (match) {
+            return true
+          } else {
+            return false
+          }
         } else {
-          return false
+          return false;
         }
       })
     });
@@ -219,6 +228,13 @@ class ListQuotes extends React.Component {
     return (
       <div>
         <Row style={{marginTop: 50}}>
+          <Col span={2} offset={20}>
+            <Badge count={this.state.filteredQuotes.length} overflowCount={10000}
+              showZero={true}
+              style={{ backgroundColor: '#05A4DE', width: 100, margin: '5px 0px 5px 0px' }} />
+          </Col>
+        </Row>
+        <Row>
           <Col span={20} offset={2}>
             <Table bordered columns={columns} dataSource={this.state.filteredQuotes}
               rowKey='id'/>
