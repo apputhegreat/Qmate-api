@@ -24,8 +24,25 @@
 .addquotes-container {
   display: block;
   margin-left: auto;
+  margin: 2% 5%;
+  border: 1px solid lightgray;
+  padding: 50px;
+  border-radius: 10px;
+}
+
+.trends-container {
+  display: block;
+  margin-left: auto;
   margin: 5% 5%;
   border: 1px solid lightgray;
   padding: 50px;
   border-radius: 10px;
+}
+
+.ant-menu-dark {
+  background-color: '#05A4DE'
+}
+
+.ant-menu-item-selected {
+  background-color: rgb(5, 164, 222);
 }
