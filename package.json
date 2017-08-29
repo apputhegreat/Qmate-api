@@ -7,7 +7,6 @@
     "async": "^2.4.1",
     "bootstrap": "^3.3.7",
     "firebase": "^4.1.1",
-    "fs": "0.0.1-security",
     "lodash": "^4.17.4",
     "re-base": "^3.0.1",
     "react": "^15.5.4",
@@ -20,7 +19,7 @@
   },
   "devDependencies": {
     "css-loader": "^0.28.4",
-    "react-scripts": "1.0.7"
+    "react-scripts": "^1.0.7"
   },
   "scripts": {
     "start": "react-scripts start",

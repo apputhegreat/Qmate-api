@@ -88,6 +88,18 @@ function fetchTags(callback) {
   CustomRebase.fetch('tags', options);
 }
 
+function fetchTrends(callback) {
+  const options = {
+    then: (data) => {
+      callback(null, data);
+    },
+    onFailure: (err) => {
+      callback(err);
+    }
+  };
+  CustomRebase.fetch('trending', options);
+}
+
 function fetchAuthors(callback) {
   const options = {
     asArray: true,
@@ -144,6 +156,10 @@ function updateAuthor(author, callback) {
   update(path, author, callback)
 }
 
+function setTrends(trending, callback) {
+  post('trending', trending, callback)
+}
+
 module.exports = {
   writeQuotes,
   writeAuthors,
@@ -157,5 +173,7 @@ module.exports = {
   writeAuthorWithImages,
   fetchAuthor,
   removeAuthor,
-  updateAuthor
+  updateAuthor,
+  fetchTrends,
+  setTrends
 }
