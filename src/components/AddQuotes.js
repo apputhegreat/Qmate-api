@@ -5,6 +5,7 @@ import * as _ from 'lodash'
 import firebaseUtil from '../utils/firebaseUtil';
 import '../common/styles.css';
 import { CustomRebase } from '../common/CustomRebase'
+import Trends from './Trends';
 
 class AddQuotes extends React.Component {
   constructor(props) {
@@ -12,7 +13,10 @@ class AddQuotes extends React.Component {
     this.state = {
       quotesDataSource : [],
       tags: [],
-      authors: []
+      authors: [],
+      trendingAuthors: [],
+      trendingTags: [],
+      showTrendsModal: false,
     }
   }
 
@@ -33,6 +37,39 @@ class AddQuotes extends React.Component {
         console.log(err);
       }
     });
+  }
+
+  componentDidMount() {
+    this.trendsRef = CustomRebase.listenTo('trending', {
+      context: this,
+      then(trends) {
+        var trendingAuthors = []
+        _.map(trends.authors, (authorValue, index) => {
+          var matchAuthor = _.find(this.state.authors, { id: authorValue})
+          if (matchAuthor) {
+            trendingAuthors.push({
+              index,
+              id: matchAuthor.id,
+              name: matchAuthor.name
+            })
+          }
+        })
+        var trendingTags = _.map(trends.tags, (value, index) => {
+          return {
+            tag: value,
+            index
+          }
+        })
+        this.setState({
+          trendingAuthors,
+          trendingTags
+        })
+      },
+      onFailure(err) {
+        console.log(err);
+      }
+    });
+
   }
 
   newQuote() {
@@ -117,6 +154,39 @@ class AddQuotes extends React.Component {
 
   success(content) {
     message.success(content);
+  }
+
+  editTrends() {
+    this.setState({ showTrendsModal: true })
+  }
+
+  onCancel() {
+    this.setState({ showTrendsModal: false })
+  }
+
+  onSubmitTrends(values) {
+    var trendingAuthors = [];
+    _.map(values.trend_authors, (authorValue, index) => {
+      var matchAuthor = _.find(this.state.authors, { id: authorValue})
+      if (matchAuthor) {
+        trendingAuthors.push({
+          index,
+          id: matchAuthor.id,
+          name: matchAuthor.name
+        })
+      }
+    })
+    var trendingTags = _.map(values.trend_tags, (tag, index) => {
+      return {
+        tag,
+        index
+      }
+    })
+    this.setState({
+      trendingAuthors,
+      trendingTags,
+      showTrendsModal: false
+    })
   }
 
   render() {
@@ -209,35 +279,85 @@ class AddQuotes extends React.Component {
       },
     }];
 
+    var authorTrendsCols = [{
+      title: 'Authors',
+      dataIndex: 'name',
+      width: '50%'
+    }]
+
+    var tagTrendsCols = [{
+      title: 'Tags',
+      dataIndex: 'tag',
+      width: '50%'
+    }]
+
+    var trendsModal = null;
+    if (this.state.showTrendsModal) {
+      trendsModal = (
+        <Trends authors={this.state.authors} tags={this.state.tags}
+          trendingAuthors={this.state.trendingAuthors}
+          trendingTags={this.state.trendingTags}
+          onCancel={() => this.onCancel()}
+          onSubmit={(values) => this.onSubmitTrends(values)} />
+      )
+    }
+
     return (
       <div>
-        <div className="addquotes-container">
-          <Form>
-            <Table dataSource={quotesDataSource} columns={addQuotesColumns}
-                pagination={false} bordered rowKey='index'/>
-            <Button key="okay" type="default" size="large"
-              onClick={() => this.newQuote()}
-              style={{marginTop: '10px', float: 'left'}} icon="plus-circle">
-              Add Row
-            </Button>
-          </Form>
-        </div>
         <Row>
-          <Col span={4} offset={6}>
-            <Button key="okay" type="primary" size="large"
-              onClick={() => this.resetQuotes()}
-              style={{width: '100%'}}>
-              Reset
-            </Button>
+          <Col span={18}>
+            <Row>
+              <div className="addquotes-container">
+                <Form>
+                  <Table dataSource={quotesDataSource} columns={addQuotesColumns}
+                      pagination={false} bordered rowKey='index'/>
+                  <Button key="okay" type="default" size="large"
+                    onClick={() => this.newQuote()}
+                    style={{marginTop: '10px', float: 'left'}} icon="plus-circle">
+                    Add Row
+                  </Button>
+                </Form>
+              </div>
+            </Row>
+            <Row>
+              <Col span={4} offset={6}>
+                <Button key="okay" type="primary" size="large"
+                  onClick={() => this.resetQuotes()}
+                  style={{width: '100%'}}>
+                  Reset
+                </Button>
+              </Col>
+              <Col span={4} offset={4}>
+                <Button key="okay" type="primary" size="large"
+                  onClick={() => this.submitQuotes()}
+                  style={{width: '100%'}}>
+                  Submit
+                </Button>
+              </Col>
+            </Row>
           </Col>
-          <Col span={4} offset={4}>
-            <Button key="okay" type="primary" size="large"
-              onClick={() => this.submitQuotes()}
-              style={{width: '100%'}}>
-              Submit
-            </Button>
+          <Col span={6}>
+            <div className="trends-container">
+              <label>TRENDZ</label>
+              <Row>
+                <Table columns={authorTrendsCols} dataSource={this.state.trendingAuthors}
+                  pagination={false} bordered rowKey='index'/>
+              </Row>
+              <Row style={{marginTop: '10px'}}>
+                <Table columns={tagTrendsCols} dataSource={this.state.trendingTags}
+                  pagination={false} bordered rowKey='index'/>
+              </Row>
+              <Row>
+                <Button key="okay" type="default" size="large"
+                    onClick={() => this.editTrends()}
+                    style={{marginTop: '10px', float: 'left'}} icon="edit">
+                    Edit Trends
+                  </Button>
+              </Row>  
+            </div>
           </Col>
         </Row>
+        {trendsModal}
       </div>
     )
   }
