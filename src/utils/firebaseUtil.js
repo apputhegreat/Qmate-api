@@ -113,6 +113,19 @@ function fetchAuthors(callback) {
   CustomRebase.fetch('authors', options);
 }
 
+function fetchQuotes(callback) {
+  const options = {
+    asArray: true,
+    then: (data) => {
+      callback(null, data);
+    },
+    onFailure: (err) => {
+      callback(err);
+    }
+  };
+  CustomRebase.fetch('quotes', options);
+}
+
 function updateQuote(quote, callback) {
   const path = sprintf('quotes/%s', quote.id);
   update(path, quote, callback)
@@ -120,6 +133,10 @@ function updateQuote(quote, callback) {
 
 function setTags(tags, callback) {
   post('tags', tags, callback)
+}
+
+function setQuoteOftheDay(quote, callback) {
+  post('quoteOftheDay', quote, callback)
 }
 
 function setConfigs(path, config, callback) {
@@ -175,5 +192,7 @@ module.exports = {
   removeAuthor,
   updateAuthor,
   fetchTrends,
-  setTrends
+  setTrends,
+  fetchQuotes,
+  setQuoteOftheDay
 }

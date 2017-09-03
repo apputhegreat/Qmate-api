@@ -17,6 +17,7 @@ class AddQuotes extends React.Component {
       trendingAuthors: [],
       trendingTags: [],
       showTrendsModal: false,
+      quoteOfTheDay: {}
     }
   }
 
@@ -70,6 +71,23 @@ class AddQuotes extends React.Component {
       }
     });
 
+    this.trendsRef = CustomRebase.listenTo('quoteOftheDay', {
+      context: this,
+      then(quoteOfDay) {
+        firebaseUtil.fetchQuotes((err, data) => {
+          var dayquote = _.find(data, { id: quoteOfDay.id})
+          console.log('quote->', dayquote)
+          if (dayquote) {
+            this.setState({
+              quoteOfTheDay: dayquote
+            })
+          }
+        })
+      },
+      onFailure(err) {
+        console.log(err);
+      }
+    });
   }
 
   newQuote() {
@@ -306,6 +324,22 @@ class AddQuotes extends React.Component {
       <div>
         <Row>
           <Col span={18}>
+            <Row>
+                <div className="quoteday-container">
+                  <Row><label><b>Quote Of The Day</b></label></Row>
+                  <Row>
+                    <Col span={15}>
+                      <label>{this.state.quoteOfTheDay.text}</label>
+                    </Col>
+                    <Col span={4}>
+                      <label>{this.state.quoteOfTheDay.author}</label>
+                    </Col>
+                    <Col span={5}>
+                      <label>{this.state.quoteOfTheDay.tags}</label>
+                    </Col>
+                  </Row>
+                </div>
+              </Row>
             <Row>
               <div className="addquotes-container">
                 <Form>

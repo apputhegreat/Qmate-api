@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Row, Select } from 'antd';
+import { Button, Col, Form, Input, message, Row, Select } from 'antd';
 import React from 'react';
 import * as _ from 'lodash';
 
@@ -87,6 +87,19 @@ class  EditQuote extends React.Component {
     })
   }
 
+  setQuoteOftheDay() {
+    var quoteOftheDay = {
+      id: this.state.quoteId
+    }
+    firebaseUtil.setQuoteOftheDay(quoteOftheDay, (err) => {
+      if (err) {
+        message.success('Failed to set the Quote Of The day');
+      } else {
+        message.success('Seccesfully set the Quote Of The day');
+      }
+    })
+  }
+
   render() {
     const FormItem = Form.Item;
     const { getFieldDecorator } = this.props.form;
@@ -171,6 +184,9 @@ class  EditQuote extends React.Component {
           </Row>
           </Form>
           </Col>
+        </Row>
+        <Row style={{ marginTop: '2%', marginBottom: '2%' }}>
+          <Button type="primary" size="large" onClick={() => this.setQuoteOftheDay()}>Set this as Quote Of The day</Button>
         </Row>
       </div>
     )
