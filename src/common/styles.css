@@ -39,6 +39,15 @@
   border-radius: 10px;
 }
 
+.quoteday-container {
+  display: block;
+  margin-left: auto;
+  margin: 2% 5%;
+  border: 1px solid lightgray;
+  padding: 50px;
+  border-radius: 10px;
+}
+
 .ant-menu-dark {
   background-color: '#05A4DE'
 }
