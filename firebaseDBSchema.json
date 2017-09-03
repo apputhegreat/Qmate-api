@@ -40,5 +40,17 @@
             "favouriteQuotes": ["key1", "key2"],
             "favouriteAuthors": ["key1", "key2"]
         }
+    },
+    "trending": {
+        "authors": {
+            "1": "authorId",
+            "2": "authorId",
+            "3": "authorId"
+        },
+        "tags": {
+            "1": "motivation",
+            "2": "inspirational",
+            "3": "Humour"
+        }
     }
 }
