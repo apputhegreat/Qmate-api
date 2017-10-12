@@ -18,12 +18,14 @@ class  EditAuthor extends React.Component {
   componentWillMount() {
     firebaseUtil.fetchAuthor(this.state.authorId, (err, data) => {
       if (!err) {
-        var imageRef = CustomRebase.initializedApp.storage().refFromURL(data.image);
-        imageRef.getDownloadURL().then((url) => {
-          document.getElementById("current_image").src = url;
-        }).catch((err) => {
-          console.log(err);
-        });
+        if (data.image) {
+          var imageRef = CustomRebase.initializedApp.storage().refFromURL(data.image);
+          imageRef.getDownloadURL().then((url) => {
+            document.getElementById("current_image").src = url;
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
         this.setState({
           author: data
         });
@@ -44,28 +46,32 @@ class  EditAuthor extends React.Component {
     }
 
     function deleteOldImage(values, callback) {
-      var imageRef = CustomRebase.initializedApp.storage().refFromURL(this.state.author.image);
-      imageRef.delete().then(() => {
-        callback(null, values)
-      }).catch((err) => {
-        callback(err);
-      });
+      if (this.state.author.image) {
+        var imageRef = CustomRebase.initializedApp.storage().refFromURL(this.state.author.image);
+        imageRef.delete().then(() => {
+          callback(null)
+        }).catch((err) => {
+          callback(err);
+        });
+      } else {
+        callback(null);
+      }
     }
 
-    function uploadNewImage(values, callback) {
+    function uploadNewImage(callback) {
       var newImage = document.getElementById('new_image').files[0];
       var storageRef = CustomRebase.initializedApp.storage()
       var newImageRef = storageRef.ref().child('authors/' + newImage.name)
       var storageLink = sprintf('gs://%s/%s',newImageRef.location.bucket, newImageRef.location.path_)
       newImageRef.put(newImage).then((snapshot) => {
-        callback(null, storageLink, values);
+        callback(null, storageLink);
       });
     }
 
     function updateAuthor(storageLink, values, callback) {
       var author = {
         id: this.state.authorId,
-        name: values.name,
+        name: this.props.form.getFieldValue('name'),
         image: storageLink
       }
       firebaseUtil.updateAuthor(author, (err) => {

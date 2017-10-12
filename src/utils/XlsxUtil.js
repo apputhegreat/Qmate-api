@@ -49,10 +49,12 @@ function getUniqQuotes(quotesInDB, newQuotes) {
 var setQuotesFromXlsx = () => {
  var authorsDB = []
  var authorsNotInDB = []
- var readQuotes = (quotesInDB, authorsInDB, callback) => {
+ var totalTags = []
+ var readQuotes = (tagsInDB, quotesInDB, authorsInDB, callback) => {
    authorsDB = authorsInDB
+   totalTags = tagsInDB
    var workbook = xlsx.readFile(__dirname +"/../../configs/Quotes.xlsx");
-   var QuotesSheet = workbook.Sheets["Quotes"]
+   var QuotesSheet = workbook.Sheets["Ravi"]
    var quotes = {}
    for(var key in QuotesSheet) {
      if (!QuotesSheet.hasOwnProperty(key) || key[0] == "!") continue
@@ -98,7 +100,11 @@ var setQuotesFromXlsx = () => {
        case "C":
           if (QuotesSheet[key].v.trim()) {
             var tagList = QuotesSheet[key].v.trim().split(',');
+            tagList = _.map(tagList, (tag) => {
+              return tag.trim();
+            })
             quotes[rowId] = getRow(quotes[rowId], rowId, 'tags', tagList)
+            totalTags = _.union(totalTags, tagList);
             break;
           } else {
             continue
@@ -106,13 +112,16 @@ var setQuotesFromXlsx = () => {
      }
    }
    var uniqQuotes = getUniqQuotes(quotesInDB, quotes);
-   firebaseUtil.writeQuotes(uniqQuotes, callback);
+   firebaseUtil.setTags(totalTags, (err) => {
+    firebaseUtil.writeQuotes(uniqQuotes, callback);    
+   });
  }
 
  //fs.writeFile('quotes.json', JSON.stringify(quotes), 'utf8', callback);
  async.waterfall([
    getAllAuthors,
    getAllQuotes,
+   getAllTags,
    readQuotes
  ], (err, data) => {
    if (err) {
@@ -137,6 +146,19 @@ var getAllQuotes = (authors, callback) => {
   asArray: true,
   then(data){
     callback(null, data, authors)
+  }
+})
+}
+
+var getAllTags = (quotesInDB, authorsInDB, callback) => {
+  CustomRebase.fetch('tags', {
+  context: this,
+  asArray: true,
+  then(data){
+    data = _.map(data, (tag) => {
+      return tag.trim();
+    })
+    callback(null, data, quotesInDB, authorsInDB)
   }
 })
 }
