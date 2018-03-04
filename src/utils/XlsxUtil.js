@@ -47,6 +47,7 @@ function getUniqQuotes(quotesInDB, newQuotes) {
 }
 
 var setQuotesFromXlsx = () => {
+  console.log(' start');
  var authorsDB = []
  var authorsNotInDB = []
  var totalTags = []
@@ -113,7 +114,7 @@ var setQuotesFromXlsx = () => {
    }
    var uniqQuotes = getUniqQuotes(quotesInDB, quotes);
    firebaseUtil.setTags(totalTags, (err) => {
-    firebaseUtil.writeQuotes(uniqQuotes, callback);    
+    firebaseUtil.writeQuotes(uniqQuotes, callback);
    });
  }
 
@@ -124,6 +125,7 @@ var setQuotesFromXlsx = () => {
    getAllTags,
    readQuotes
  ], (err, data) => {
+   console.log('setQuotesFromXlsx ends');
    if (err) {
      console.log('err->', err);
    }
