@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "css-loader": "^0.28.4",
+    "firebase-admin": "^4.0.3",
     "react-scripts": "^1.0.7"
   },
   "scripts": {
