@@ -4,9 +4,9 @@ var fs = require('fs');
 var _ = require('lodash');
 var sprintf = require('sprintf-js').sprintf;
 
-var firebaseUtil = require('./firebaseUtil')
+var firebaseUtil = require('./firebaseUtilAPI')
 
-var CustomRebase = require('../common/CustomRebase').CustomRebase
+var CustomRebase = require('../common/CustomRebaseAPI').CustomRebaseAPI
 
 var getRow = (row, rowId, property, value) => {
   if (!row) {
@@ -55,7 +55,7 @@ var setQuotesFromXlsx = () => {
    authorsDB = authorsInDB
    totalTags = tagsInDB
    var workbook = xlsx.readFile(__dirname +"/../../configs/Quotes.xlsx");
-   var QuotesSheet = workbook.Sheets["Ravi"]
+   var QuotesSheet = workbook.Sheets["latest"]
    var quotes = {}
    for(var key in QuotesSheet) {
      if (!QuotesSheet.hasOwnProperty(key) || key[0] == "!") continue
@@ -164,6 +164,7 @@ var getAllTags = (quotesInDB, authorsInDB, callback) => {
   }
 })
 }
+setQuotesFromXlsx();
 
 module.exports = {
   setQuotesFromXlsx: setQuotesFromXlsx,
